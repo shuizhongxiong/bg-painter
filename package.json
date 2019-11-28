@@ -1,15 +1,22 @@
 {
   "name": "bg-painter",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint --fix",
+    "analyz": "vue-cli-service build --report"
   },
   "dependencies": {
     "core-js": "^2.6.5",
+    "dat.gui": "^0.7.6",
+    "element-ui": "^2.12.0",
+    "html2canvas": "^1.0.0-rc.5",
+    "normalize.css": "^8.0.1",
+    "simplex-noise": "^2.4.0",
     "vue": "^2.6.10",
+    "vue-draggable-resizable": "^2.0.1",
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1"
   },
@@ -19,6 +26,7 @@
     "@vue/cli-service": "^3.12.0",
     "@vue/eslint-config-prettier": "^5.0.0",
     "babel-eslint": "^10.0.1",
+    "babel-plugin-component": "^1.1.1",
     "eslint": "^5.16.0",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-vue": "^5.0.0",
