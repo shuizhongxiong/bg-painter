@@ -373,7 +373,10 @@ export default {
         cW = particlesCanvas.width = trailCanvas.width = size[0];
         cH = particlesCanvas.height = trailCanvas.height = size[1];
       };
-      this.restartHandle = function() {};
+      this.restartHandle = function() {
+        trailCtx.clearRect(0, 0, cW, cH);
+        particleCtx.clearRect(0, 0, cW, cH);
+      };
       this.changeStatusHandle = function(isPause) {
         if (isPause) {
           cancelAnimationFrame(raf);
@@ -411,7 +414,7 @@ export default {
           }
         });
       gui
-        .add(settings, 'P_MAX_VELOCITY', 10, 100)
+        .add(settings, 'P_MAX_VELOCITY', 0, 100)
         .name('最大速度')
         .onFinishChange(function() {
           for (let i = 0; i < settings.PARTICLE_NUM; i++) {
@@ -419,7 +422,7 @@ export default {
           }
         });
       gui
-        .add(settings, 'P_MAX_ACC', 0.2, 2)
+        .add(settings, 'P_MAX_ACC', 0, 2)
         .name('最大加速度')
         .onFinishChange(function() {
           for (let i = 0; i < settings.PARTICLE_NUM; i++) {

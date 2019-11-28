@@ -35,6 +35,7 @@
             @change="handleInput()"
           ></el-input-number>
         </div>
+        <div class="header-item">{{ scalePercent * 100 }}%</div>
       </div>
       <div class="float-right">
         <div class="header-item">
@@ -97,6 +98,7 @@
             background: compData.bgColor,
             width: inputWidth + 'px',
             height: inputHeight + 'px',
+            transform: `scale3d(${scalePercent}, ${scalePercent}, 1)`,
           }"
         >
           <div
@@ -156,10 +158,25 @@ export default {
       curtainHeight: 0,
       curtainWidth: 0,
       curtainBg: '',
+      scalePercent: 1,
     };
   },
   computed: {
     size() {
+      const el = this.$refs.mainContent;
+      if (el) {
+        const width = el.offsetWidth;
+        const height = el.offsetHeight;
+        let percentX = 0;
+        let percentY = 0;
+        if (this.inputWidth > width) {
+          percentX = width / this.inputWidth;
+        }
+        if (this.inputHeight > height) {
+          percentY = height / this.inputHeight;
+        }
+        this.scalePercent = +Math.min(percentX, percentY).toFixed(2) || 1;
+      }
       return [this.inputWidth, this.inputHeight];
     },
     ...mapState(['compData']),
@@ -266,7 +283,9 @@ export default {
     .header-item {
       position: relative;
       display: inline-block;
-      vertical-align: bottom;
+      vertical-align: middle;
+      font-size: 14px;
+      color: #606266;
       .el-button img {
         width: 14px;
         vertical-align: bottom;
@@ -277,7 +296,7 @@ export default {
       i.el-icon-close {
         font-size: 14px;
         color: #7c98b6;
-        margin: 0 10px;
+        margin: 0 4px;
       }
       .el-color-picker {
         height: 14px;
@@ -366,13 +385,13 @@ export default {
       }
     }
     .main-content {
-      overflow: auto;
       margin: 0 20px;
       height: 100%;
       .content-painter {
         overflow: hidden;
         position: relative;
         margin: 0 auto;
+        transform-origin: left top;
         .painter-curtain {
           z-index: 100;
           position: absolute;

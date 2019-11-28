@@ -3,7 +3,9 @@
     <div class="header-logo">
       <img src="~images/logo.png" alt="极光封面生成工具" />
     </div>
-    <el-button type="primary" @click="handleExport()">生成导出</el-button>
+    <el-button type="primary" :loading="isExportLoading" @click="handleExport()"
+      >生成导出</el-button
+    >
   </div>
 </template>
 
@@ -12,26 +14,43 @@ import html2canvas from 'html2canvas';
 
 export default {
   name: 'home-header',
+  data() {
+    return {
+      isExportLoading: false,
+    };
+  },
   methods: {
     handleExport() {
-      html2canvas(document.getElementById('screenshot'), {
-        allowTaint: true,
-      }).then(canvas => {
-        canvas.style.display = 'none';
-        document.body.appendChild(canvas);
+      this.isExportLoading = true;
 
-        let MIME_TYPE = 'image/png';
-        let imgURL = canvas.toDataURL(MIME_TYPE);
+      // 还原图形
+      const el = document.getElementById('screenshot');
+      el.classList.add('header-export');
 
-        let dlLink = document.createElement('a');
-        dlLink.download = new Date().getTime();
-        dlLink.href = imgURL;
-        dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
+      this.$nextTick(() => {
+        html2canvas(el, {
+          allowTaint: true,
+        }).then(canvas => {
+          canvas.style.display = 'none';
+          document.body.appendChild(canvas);
 
-        document.body.appendChild(dlLink);
-        dlLink.click();
-        document.body.removeChild(dlLink);
-        document.body.removeChild(canvas);
+          let MIME_TYPE = 'image/png';
+          let imgURL = canvas.toDataURL(MIME_TYPE);
+
+          let dlLink = document.createElement('a');
+          dlLink.download = new Date().getTime();
+          dlLink.href = imgURL;
+          dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
+
+          document.body.removeChild(canvas);
+
+          document.body.appendChild(dlLink);
+          dlLink.click();
+          document.body.removeChild(dlLink);
+
+          el.classList.remove('header-export');
+          this.isExportLoading = false;
+        });
       });
     },
   },
@@ -59,5 +78,10 @@ export default {
       width: 100%;
     }
   }
+}
+</style>
+<style>
+.header-export {
+  transform: scale3d(1, 1, 1) !important;
 }
 </style>

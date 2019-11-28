@@ -107,12 +107,6 @@ export default {
         context.fillStyle = 'transparent';
         context.lineCap = context.lineJoin = 'round';
       }
-      function restart() {
-        context.save();
-        context.fillStyle = 'transparent';
-        context.fillRect(0, 0, screenWidth, screenHeight);
-        context.restore();
-      }
 
       function getNoise(x, y, z) {
         let octaves = 4,
@@ -195,7 +189,9 @@ export default {
 
       init();
       this.changeSizeHandle = changeSize;
-      this.restartHandle = restart;
+      this.restartHandle = function() {
+        context.clearRect(0, 0, screenWidth, screenHeight);
+      };
       this.changeStatusHandle = function(isPause) {
         if (isPause) {
           cancelAnimationFrame(raf);
