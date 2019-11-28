@@ -488,6 +488,6 @@ canvas {
   position: absolute;
   top: 0;
   left: 0;
-  cursor: crosshair;
+  cursor: all-scroll;
 }
 </style>
