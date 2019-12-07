@@ -39,13 +39,11 @@
       </div>
       <div class="float-right">
         <div class="header-item">
-          <el-tooltip content="键盘空格快速控制" placement="top">
-            <el-button @click="handleStatus()">
-              <img v-if="isPause" src="~images/home/btn-play.png" alt="播放" />
-              <img v-if="!isPause" src="~images/home/btn-pause.png" alt="暂停" />
-              {{ isPause ? '播放' : '暂停' }}</el-button
-            >
-          </el-tooltip>
+          <el-button @click="handleStatus()">
+            <img v-if="isPause" src="~images/home/btn-play.png" alt="播放" />
+            <img v-if="!isPause" src="~images/home/btn-pause.png" alt="暂停" />
+            {{ isPause ? '播放' : '暂停' }}</el-button
+          >
         </div>
         <div class="header-item">
           <el-button @click="handleCurtain()">
@@ -60,12 +58,10 @@
           >
         </div>
         <div class="header-item">
-          <el-tooltip content="播放状态才会有效果" placement="top">
-            <el-button @click.stop="handleSetting()">
-              <img src="~images/home/btn-color.png" alt="修改效果" />
-              修改效果</el-button
-            >
-          </el-tooltip>
+          <el-button @click.stop="handleSetting()">
+            <img src="~images/home/btn-color.png" alt="修改效果" />
+            修改效果</el-button
+          >
           <div class="popover-gui" id="gui" v-show="guiVisible" @click.stop></div>
         </div>
         <div class="header-item item-color">
@@ -183,10 +179,12 @@ export default {
   },
   watch: {
     compData(newVal) {
-      this.dragX = newVal.left || 0;
-      this.dragY = newVal.top || 0;
-      this.isPause = false;
-      this.curtainVisible = false;
+      if (newVal) {
+        this.dragX = newVal.left || 0;
+        this.dragY = newVal.top || 0;
+        this.isPause = false;
+        this.curtainVisible = false;
+      }
     },
   },
   mounted() {
@@ -197,13 +195,6 @@ export default {
     document.addEventListener('click', () => {
       this.guiVisible = false;
       this.areasVisible = false;
-    });
-    document.addEventListener('keydown', e => {
-      let event = e || window.event;
-      if (event && event.keyCode === 32) {
-        // 空格
-        this.handleStatus();
-      }
     });
   },
   methods: {

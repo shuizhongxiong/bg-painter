@@ -1,27 +1,35 @@
 <template>
-  <div class="sidebar">
-    <div class="sidebar-header">封面样式</div>
-    <div class="sidebar-list">
-      <div
-        class="list-item"
-        v-for="data of list"
-        :key="data.name"
-        :class="{ actived: data.comp === currentComp }"
-      >
-        <div class="item-img" @click="handleImg(data)">
-          <img :src="getUrl(data.imageName)" :alt="data.name" />
+  <el-tabs :stretch="true" v-model="activeName" @tab-click="handleTabClick">
+    <el-tab-pane label="随机生成" name="random">
+      <div class="sidebar-list">
+        <div
+          class="list-item"
+          v-for="data of list"
+          :key="data.name"
+          :class="{ actived: data.comp === currentComp }"
+        >
+          <div class="item-img" @click="handleImg(data)">
+            <img :src="getUrl(data.imageName)" :alt="data.name" />
+          </div>
+          <div class="item-name">{{ data.name }}</div>
         </div>
-        <div class="item-name">{{ data.name }}</div>
       </div>
-    </div>
-  </div>
+    </el-tab-pane>
+    <el-tab-pane label="配置生成" name="setting">
+      <bezier-editor v-model="bezier" @input="bezierChange"></bezier-editor>
+    </el-tab-pane>
+  </el-tabs>
 </template>
 
 <script>
 import { mapMutations } from 'vuex';
+import BezierEditor from '@/components/bezier-editor/BezierEditor.vue';
 
 export default {
   name: 'home-sidebar',
+  components: {
+    BezierEditor,
+  },
   data() {
     return {
       currentComp: '',
@@ -36,10 +44,21 @@ export default {
           left: 170,
         },
       ],
+      activeName: 'random',
     };
   },
   created() {
     this.handleImg(this.list[0]);
+  },
+  computed: {
+    bezier: {
+      get() {
+        return this.$store.state.bezier;
+      },
+      set(val) {
+        this.$store.state.bezier = val;
+      },
+    },
   },
   methods: {
     getUrl(name) {
@@ -52,56 +71,69 @@ export default {
       this.currentComp = data.comp;
       this.changeCompData(data);
     },
-    ...mapMutations(['changeCompData']),
+    handleTabClick() {
+      if (this.activeName === 'random') {
+        this.handleImg(this.list[0]);
+      } else if (this.activeName === 'setting') {
+        this.handleImg({
+          comp: 'painter-0',
+          bgColor: 'rgba(0, 0, 0, 1)',
+        });
+      }
+    },
+    bezierChange(data) {
+      this.changeBezier(data);
+    },
+    ...mapMutations(['changeCompData', 'changeBezier']),
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.sidebar {
-  height: 100%;
-  background: #fff;
-  border-left: 1px solid #dfe3eb;
-  color: #333;
-  .sidebar-header {
-    height: 50px;
-    line-height: 50px;
+.sidebar-list {
+  padding: 20px;
+  .list-item {
     text-align: center;
-    font-size: 14px;
-    font-weight: bold;
-    background: #f5f8fa;
-  }
-  .sidebar-list {
-    padding: 20px;
-    .list-item {
-      text-align: center;
-      & + .list-item {
-        margin-top: 12px;
-      }
-      &.actived {
-        color: #18ad91;
-        .item-img {
-          border: 2px solid #18ad91;
-        }
-      }
+    & + .list-item {
+      margin-top: 12px;
+    }
+    &.actived {
+      color: #18ad91;
       .item-img {
-        overflow: hidden;
-        margin: 0 auto;
-        width: 200px;
-        height: 100px;
-        border-radius: 10px;
-        cursor: pointer;
-        > img {
-          display: block;
-          width: 100%;
-        }
+        border: 2px solid #18ad91;
       }
-      .item-name {
-        margin-top: 8px;
-        font-size: 14px;
-        font-weight: bold;
+    }
+    .item-img {
+      overflow: hidden;
+      margin: 0 auto;
+      width: 200px;
+      height: 100px;
+      border-radius: 10px;
+      cursor: pointer;
+      > img {
+        display: block;
+        width: 100%;
       }
+    }
+    .item-name {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: bold;
     }
   }
 }
+// .sidebar {
+//   height: 100%;
+//   background: #fff;
+//   border-left: 1px solid #dfe3eb;
+//   color: #333;
+//   .sidebar-header {
+//     height: 50px;
+//     line-height: 50px;
+//     text-align: center;
+//     font-size: 14px;
+//     font-weight: bold;
+//     background: #f5f8fa;
+//   }
+// }
 </style>

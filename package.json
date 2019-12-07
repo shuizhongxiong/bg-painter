@@ -9,10 +9,12 @@
     "analyz": "vue-cli-service build --report"
   },
   "dependencies": {
+    "bezier-easing": "^2.1.0",
     "core-js": "^2.6.5",
     "dat.gui": "^0.7.6",
     "element-ui": "^2.12.0",
     "html2canvas": "^1.0.0-rc.5",
+    "lodash": "^4.17.15",
     "normalize.css": "^8.0.1",
     "simplex-noise": "^2.4.0",
     "vue": "^2.6.10",

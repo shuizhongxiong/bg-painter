@@ -19,6 +19,8 @@ import {
   Checkbox,
   CheckboxGroup,
   ColorPicker,
+  Tabs,
+  TabPane,
 } from 'element-ui';
 Vue.use(Button);
 Vue.use(Container);
@@ -32,6 +34,8 @@ Vue.use(Tooltip);
 Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
 Vue.use(ColorPicker);
+Vue.use(Tabs);
+Vue.use(TabPane);
 
 Vue.config.productionTip = false;
 
