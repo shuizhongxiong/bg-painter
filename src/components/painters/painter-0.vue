@@ -73,6 +73,8 @@ export default {
         gap: 4, // 图形间距
         groupCount: 40, // 图形组个数
         hollowR: 50, // 空心半径
+        shape: 'round', // 形状
+        sizeType: 0, // 大小趋势
       };
 
       let cv = document.getElementById(Setting.domId);
@@ -83,14 +85,66 @@ export default {
       let centerX = Setting.cW / 2;
       let centerY = Setting.cH / 2;
 
-      function drawPoint(x, y) {
+      function drawPoint(x, y, index) {
         ctx.save();
         ctx.beginPath();
         ctx.fillStyle = Setting.color;
-        ctx.arc(x, y, Setting.r, 0, Math.PI * 2, true);
+        switch (Setting.shape) {
+          case 'round':
+            ctx.arc(x, y, Setting.r * getScale(index), 0, Math.PI * 2, true);
+            break;
+          case 'rectangle':
+            ctx.fillRect(x, y, Setting.r * 2 * getScale(index), Setting.r * 2 * getScale(index));
+            break;
+          case 'triangle':
+            ctx.moveTo(x + Setting.r * 1.5 * getScale(index), y);
+            ctx.lineTo(x, y + Setting.r * 3 * getScale(index));
+            ctx.lineTo(x + Setting.r * 3 * getScale(index), y + Setting.r * 3 * getScale(index));
+            break;
+          case 'diamond':
+            ctx.moveTo(x + Setting.r * 1.5 * getScale(index), y);
+            ctx.lineTo(x, y + Setting.r * 1.5 * getScale(index));
+            ctx.lineTo(x + Setting.r * 1.5 * getScale(index), y + Setting.r * 3 * getScale(index));
+            ctx.lineTo(x + Setting.r * 3 * getScale(index), y + Setting.r * 1.5 * getScale(index));
+            break;
+          default:
+            break;
+        }
         ctx.closePath();
         ctx.fill();
         ctx.restore();
+      }
+
+      const interval = Math.ceil(Setting.count / 3);
+      const scaleArr = [0.5, 1, 2];
+      function getScale(index) {
+        if (+Setting.sizeType === 0) {
+          return scaleArr[1];
+        } else if (index < interval) {
+          if (+Setting.sizeType === 1 || +Setting.sizeType === 2) {
+            return scaleArr[2];
+          } else if (+Setting.sizeType === 3 || +Setting.sizeType === 4) {
+            return scaleArr[1];
+          } else if (+Setting.sizeType === 5 || +Setting.sizeType === 6) {
+            return scaleArr[0];
+          }
+        } else if (index >= interval && index < interval * 2) {
+          if (+Setting.sizeType === 3 || +Setting.sizeType === 5) {
+            return scaleArr[2];
+          } else if (+Setting.sizeType === 1 || +Setting.sizeType === 6) {
+            return scaleArr[1];
+          } else if (+Setting.sizeType === 2 || +Setting.sizeType === 4) {
+            return scaleArr[0];
+          }
+        } else if (index >= interval * 2) {
+          if (+Setting.sizeType === 4 || +Setting.sizeType === 6) {
+            return scaleArr[2];
+          } else if (+Setting.sizeType === 2 || +Setting.sizeType === 5) {
+            return scaleArr[1];
+          } else if (+Setting.sizeType === 1 || +Setting.sizeType === 3) {
+            return scaleArr[0];
+          }
+        }
       }
 
       let bezier = BezierEasing(0.4, 0.1, 0.4, 0.8);
@@ -100,7 +154,7 @@ export default {
         for (let i = 0; i < Setting.count; i++) {
           const x = i * (Setting.gap + Setting.r * 2) + Setting.hollowR;
           const y = bezier ? bezier(i * interval) * 200 : 0;
-          drawPoint(x, y);
+          drawPoint(x, y, i);
         }
       }
 
@@ -141,6 +195,27 @@ export default {
       gui
         .add(Setting, 'hollowR', 10, 200)
         .name('空心半径')
+        .onFinishChange(draw);
+      gui
+        .add(Setting, 'shape', {
+          圆形: 'round',
+          矩形: 'rectangle',
+          三角形: 'triangle',
+          菱形: 'diamond',
+        })
+        .name('图形')
+        .onFinishChange(draw);
+      gui
+        .add(Setting, 'sizeType', {
+          一样大小: 0,
+          大中小: 1,
+          大小中: 2,
+          中大小: 3,
+          中小大: 4,
+          小大中: 5,
+          小中大: 6,
+        })
+        .name('大小趋势')
         .onFinishChange(draw);
       gui
         .addColor(Setting, 'color')

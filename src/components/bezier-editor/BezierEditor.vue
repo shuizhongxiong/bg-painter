@@ -1,5 +1,10 @@
 <template>
   <div class="easing-editor" :class="{ dragging: dragItemType }">
+    <bezier-header
+      :selected-preset-type="selectedPresetType"
+      :display-value="displayValue"
+      @change-preset="changePreset"
+    />
     <bezier-preview
       :preview-area-width="previewAreaWidth"
       :animatonTracePositions="animatonTracePositions"
@@ -20,11 +25,6 @@
         @drag-start="dragstart($event)"
       />
     </div>
-    <bezier-header
-      :selected-preset-type="selectedPresetType"
-      :display-value="displayValue"
-      @change-preset="changePreset"
-    />
   </div>
 </template>
 
@@ -388,7 +388,7 @@ export default {
 .easing-editor {
   position: relative;
   width: 270px;
-  height: 350px;
+  // height: 350px;
   padding: 16px;
   border-radius: 2px;
   overflow: hidden;
