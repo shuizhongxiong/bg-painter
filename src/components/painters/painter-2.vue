@@ -224,7 +224,7 @@ export default {
 
         display() {
           for (let i = 0; i < this.getLength; i++) {
-            console.log(this.queue[i]);
+            // console.log(this.queue[i]);
           }
         }
       }

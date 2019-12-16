@@ -34,6 +34,9 @@ export default {
 
 <style lang="scss" scoped>
 .bezier-presets {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
   .bezier-preset-category {
     width: 50px;
     height: 50px;

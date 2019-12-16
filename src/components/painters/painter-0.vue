@@ -69,6 +69,9 @@ export default {
 
         r: 5, // 半径
         color: '#fff', // 图形颜色
+        // color1: '#fff', // 图形颜色
+        // color2: '#fff', // 图形颜色
+        // color3: '#fff', // 图形颜色
         count: 17, // 图形个数
         gap: 4, // 图形间距
         groupCount: 40, // 图形组个数
@@ -82,9 +85,6 @@ export default {
       cv.width = Setting.cW;
       cv.height = Setting.cH;
 
-      let centerX = Setting.cW / 2;
-      let centerY = Setting.cH / 2;
-
       function drawPoint(x, y, index) {
         ctx.save();
         ctx.beginPath();
@@ -92,6 +92,7 @@ export default {
         switch (Setting.shape) {
           case 'round':
             ctx.arc(x, y, Setting.r * getScale(index), 0, Math.PI * 2, true);
+            // ctx.fillStyle = getFillColor(index, x, y, Setting.r * getScale(index));
             break;
           case 'rectangle':
             ctx.fillRect(x, y, Setting.r * 2 * getScale(index), Setting.r * 2 * getScale(index));
@@ -115,35 +116,14 @@ export default {
         ctx.restore();
       }
 
-      const interval = Math.ceil(Setting.count / 3);
-      const scaleArr = [0.5, 1, 2];
+      const scaleArr = [0.5, 2];
       function getScale(index) {
-        if (+Setting.sizeType === 0) {
-          return scaleArr[1];
-        } else if (index < interval) {
-          if (+Setting.sizeType === 1 || +Setting.sizeType === 2) {
-            return scaleArr[2];
-          } else if (+Setting.sizeType === 3 || +Setting.sizeType === 4) {
-            return scaleArr[1];
-          } else if (+Setting.sizeType === 5 || +Setting.sizeType === 6) {
-            return scaleArr[0];
-          }
-        } else if (index >= interval && index < interval * 2) {
-          if (+Setting.sizeType === 3 || +Setting.sizeType === 5) {
-            return scaleArr[2];
-          } else if (+Setting.sizeType === 1 || +Setting.sizeType === 6) {
-            return scaleArr[1];
-          } else if (+Setting.sizeType === 2 || +Setting.sizeType === 4) {
-            return scaleArr[0];
-          }
-        } else if (index >= interval * 2) {
-          if (+Setting.sizeType === 4 || +Setting.sizeType === 6) {
-            return scaleArr[2];
-          } else if (+Setting.sizeType === 2 || +Setting.sizeType === 5) {
-            return scaleArr[1];
-          } else if (+Setting.sizeType === 1 || +Setting.sizeType === 3) {
-            return scaleArr[0];
-          }
+        if (+Setting.sizeType === 0 || Setting.count <= 1) {
+          return 1;
+        } else if (+Setting.sizeType === 1) {
+          return ((scaleArr[0] - scaleArr[1]) / Setting.count) * index + scaleArr[1];
+        } else if (+Setting.sizeType === 2) {
+          return ((scaleArr[1] - scaleArr[0]) / Setting.count) * index + scaleArr[0];
         }
       }
 
@@ -160,6 +140,10 @@ export default {
 
       function draw() {
         ctx.clearRect(0, 0, Setting.cW, Setting.cH);
+
+        let centerX = Setting.cW / 2;
+        let centerY = Setting.cH / 2;
+
         ctx.translate(centerX, centerY);
 
         for (let i = 0; i < Setting.groupCount; i++) {
@@ -208,12 +192,8 @@ export default {
       gui
         .add(Setting, 'sizeType', {
           一样大小: 0,
-          大中小: 1,
-          大小中: 2,
-          中大小: 3,
-          中小大: 4,
-          小大中: 5,
-          小中大: 6,
+          大到小: 1,
+          小到大: 2,
         })
         .name('大小趋势')
         .onFinishChange(draw);
@@ -221,12 +201,26 @@ export default {
         .addColor(Setting, 'color')
         .name('颜色')
         .onFinishChange(draw);
+      // gui
+      //   .addColor(Setting, 'color1')
+      //   .name('颜色1')
+      //   .onFinishChange(draw);
+      // gui
+      //   .addColor(Setting, 'color2')
+      //   .name('颜色2')
+      //   .onFinishChange(draw);
+      // gui
+      //   .addColor(Setting, 'color3')
+      //   .name('颜色3')
+      //   .onFinishChange(draw);
 
       draw();
 
       this.changeSizeHandle = function(size) {
         Setting.cW = size[0];
         Setting.cH = size[1];
+        cv.width = Setting.cW;
+        cv.height = Setting.cH;
         draw();
       };
       this.restartHandle = function() {

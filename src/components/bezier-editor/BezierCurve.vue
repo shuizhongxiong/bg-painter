@@ -1,5 +1,5 @@
 <template>
-  <svg class="bezier-curve" width="150" height="250" @mousedown="$emit('drag-start', $event)">
+  <svg class="bezier-curve" width="238" height="250" @mousedown="$emit('drag-start', $event)">
     <g>
       <line
         class="linear-line"
@@ -41,9 +41,6 @@ export default {
 
 <style lang="scss" scoped>
 .bezier-curve {
-  margin-top: -8px;
-  margin-left: 32px;
-
   line.linear-line {
     stroke: rgb(238, 238, 238);
     stroke-width: 2;

@@ -10,21 +10,19 @@
       :animatonTracePositions="animatonTracePositions"
       @trigger-preview="triggerPreview"
     />
-    <div class="bezier-container">
-      <bezier-presets
-        :preset-types="presetTypes"
-        :selectedPresetIndex="selectedPresetIndex"
-        :selectedPresetType="selectedPresetType"
-        @apply-preset="applyPreset"
-      />
-      <bezier-curve
-        :linear-line-points="linearLinePoints"
-        :cubic-bezier-path-data="cubicBezierPathData"
-        :begin-points="beginPoints"
-        :end-points="endPoints"
-        @drag-start="dragstart($event)"
-      />
-    </div>
+    <bezier-presets
+      :preset-types="presetTypes"
+      :selectedPresetIndex="selectedPresetIndex"
+      :selectedPresetType="selectedPresetType"
+      @apply-preset="applyPreset"
+    />
+    <bezier-curve
+      :linear-line-points="linearLinePoints"
+      :cubic-bezier-path-data="cubicBezierPathData"
+      :begin-points="beginPoints"
+      :end-points="endPoints"
+      @drag-start="dragstart($event)"
+    />
   </div>
 </template>
 
@@ -38,8 +36,8 @@ import BezierPresets from './BezierPresets.vue';
 import BezierCurve from './BezierCurve.vue';
 import BezierHeader from './BezierHeader.vue';
 
-const FRAME_WIDTH = 136;
-const FRAME_HEIGHT = 136;
+const FRAME_WIDTH = 220;
+const FRAME_HEIGHT = 180;
 const OFFSET_TOP = 57;
 const OFFSET_LEFT = 7;
 const PREVIEW_MOVE_DURATION = 1400;
@@ -394,10 +392,5 @@ export default {
   overflow: hidden;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.2),
     0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.bezier-container {
-  display: flex;
-  margin-top: 38px;
 }
 </style>

@@ -35,7 +35,7 @@
             @change="handleInput()"
           ></el-input-number>
         </div>
-        <div class="header-item">{{ scalePercent * 100 }}%</div>
+        <div class="header-item">{{ (scalePercent * 100).toFixed(0) }}%</div>
       </div>
       <div class="float-right">
         <div class="header-item">
@@ -163,15 +163,15 @@ export default {
       if (el) {
         const width = el.offsetWidth;
         const height = el.offsetHeight;
-        let percentX = 0;
-        let percentY = 0;
+        let percentX = 1;
+        let percentY = 1;
         if (this.inputWidth > width) {
           percentX = width / this.inputWidth;
         }
         if (this.inputHeight > height) {
           percentY = height / this.inputHeight;
         }
-        this.scalePercent = +Math.min(percentX, percentY).toFixed(2) || 1;
+        this.scalePercent = +Math.min(percentX, percentY).toFixed(2);
       }
       return [this.inputWidth, this.inputHeight];
     },
