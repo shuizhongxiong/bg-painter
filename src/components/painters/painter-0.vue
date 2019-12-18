@@ -68,10 +68,8 @@ export default {
         cH: size[1], // canvas高
 
         r: 5, // 半径
-        color: '#fff', // 图形颜色
-        // color1: '#fff', // 图形颜色
-        // color2: '#fff', // 图形颜色
-        // color3: '#fff', // 图形颜色
+        color1: '#fff', // 起始颜色
+        color2: '#fff', // 终止颜色
         count: 17, // 图形个数
         gap: 4, // 图形间距
         groupCount: 40, // 图形组个数
@@ -88,11 +86,12 @@ export default {
       function drawPoint(x, y, index) {
         ctx.save();
         ctx.beginPath();
-        ctx.fillStyle = Setting.color;
+
+        ctx.fillStyle = getFillColor(x, y);
+
         switch (Setting.shape) {
           case 'round':
             ctx.arc(x, y, Setting.r * getScale(index), 0, Math.PI * 2, true);
-            // ctx.fillStyle = getFillColor(index, x, y, Setting.r * getScale(index));
             break;
           case 'rectangle':
             ctx.fillRect(x, y, Setting.r * 2 * getScale(index), Setting.r * 2 * getScale(index));
@@ -125,6 +124,15 @@ export default {
         } else if (+Setting.sizeType === 2) {
           return ((scaleArr[1] - scaleArr[0]) / Setting.count) * index + scaleArr[0];
         }
+      }
+
+      function getFillColor(x, y) {
+        let start = Setting.hollowR;
+        let end = (Setting.r * 2 + Setting.gap) * Setting.count + start;
+        var grd = ctx.createLinearGradient(start, y, end, y);
+        grd.addColorStop(0, Setting.color1);
+        grd.addColorStop(1, Setting.color2);
+        return grd;
       }
 
       let bezier = BezierEasing(0.4, 0.1, 0.4, 0.8);
@@ -198,21 +206,13 @@ export default {
         .name('大小趋势')
         .onFinishChange(draw);
       gui
-        .addColor(Setting, 'color')
-        .name('颜色')
+        .addColor(Setting, 'color1')
+        .name('起始颜色')
         .onFinishChange(draw);
-      // gui
-      //   .addColor(Setting, 'color1')
-      //   .name('颜色1')
-      //   .onFinishChange(draw);
-      // gui
-      //   .addColor(Setting, 'color2')
-      //   .name('颜色2')
-      //   .onFinishChange(draw);
-      // gui
-      //   .addColor(Setting, 'color3')
-      //   .name('颜色3')
-      //   .onFinishChange(draw);
+      gui
+        .addColor(Setting, 'color2')
+        .name('终止颜色')
+        .onFinishChange(draw);
 
       draw();
 
